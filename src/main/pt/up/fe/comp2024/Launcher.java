@@ -54,6 +54,11 @@ public class Launcher {
         // Check if there are parsing errors
         TestUtils.noErrors(parserResult.getReports());
 
+        JavaCalcGenerator gen = new JavaCalcGenerator("Calculator");
+
+        String generatedCode = gen.visit(parserResult.getRootNode(),"");
+
+        System.out.println(generatedCode);
         // ... add remaining stages
     }
 
@@ -74,5 +79,6 @@ public class Launcher {
 
         return config;
     }
+
 }
 
