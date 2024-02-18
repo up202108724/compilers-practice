@@ -17,6 +17,7 @@ import pt.up.fe.comp.jmm.parser.JmmParserResult;
 import pt.up.fe.comp.jmm.report.Report;
 import pt.up.fe.comp.jmm.report.ReportType;
 import pt.up.fe.comp.jmm.report.Stage;
+import pt.up.fe.comp2024.IPV4Parser;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsSystem;
@@ -43,6 +44,24 @@ public class Launcher {
         // Read contents of input file
         String code = SpecsIo.read(inputFile);
 
+        var input = new ANTLRInputStream(code);
+
+        var lex = new pt.up.fe.comp2024.IPV4Lexer(input);
+
+        var token = lex.nextToken();
+
+        while (token.getType()!= pt.up.fe.comp2024.IPV4Lexer.EOF){
+            System.out.println(token);
+            if(token.getType()== pt.up.fe.comp2024.IPV4Lexer.INTEGER){
+                var value = Integer.parseInt(token.getText());
+                if (value < 0 || value > 255){
+                    throw new RuntimeException("Invalid IP number, is not between 0 and 255: " + value);
+                }
+            }
+            token= lex.nextToken();
+        }
+
+        /*
         // Instantiate JmmParser
         SimpleParser parser = new SimpleParser();
 
@@ -60,6 +79,8 @@ public class Launcher {
 
         System.out.println(generatedCode);
         // ... add remaining stages
+
+        */
     }
 
     private static Map<String, String> parseArgs(String[] args) {
